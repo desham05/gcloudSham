@@ -24,16 +24,6 @@ myPassword = "qV08ERHDwOaSAn0WMo4ZwUn9AK34bMNIAziA2YIqQbk="
 r = redis.Redis(host='shamuta.redis.cache.windows.net',
         port=6379, db=0, password='qV08ERHDwOaSAn0WMo4ZwUn9AK34bMNIAziA2YIqQbk=')
    
-def disdata(rangfro=None,rangto=None,num=None):
-   cnxn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
-   cursor = cnxn.cursor()
-   start = time.time()
-   cursor.execute("SELECT TOP 10000 * FROM [earth_data]")
-   row = cursor.fetchall()
-   end = time.time()
-   executiontime = end - start
-   return render_template('count.html', ci=row, t=executiontime)
-
 def randrange(rangfro=None,rangto=None,num=None):
     dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
     cursor = dbconn.cursor()
@@ -60,7 +50,7 @@ def randrange(rangfro=None,rangto=None,num=None):
     exectime = end - start
     return render_template('count.html', t=exectime)
 	
-def randrange(rangfro=None,rangto=None,num=None):
+def disdata(rangfro=None,rangto=None,num=None):
     dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
     cursor = dbconn.cursor()
     start = time.time()
