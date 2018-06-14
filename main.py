@@ -24,7 +24,7 @@ myPassword = "qV08ERHDwOaSAn0WMo4ZwUn9AK34bMNIAziA2YIqQbk="
 r = redis.Redis(host='shamuta.redis.cache.windows.net',
         port=6379, db=0, password='qV08ERHDwOaSAn0WMo4ZwUn9AK34bMNIAziA2YIqQbk=')
    
-def disdata():
+def disdata(rangfro=None,rangto=None,num=None):
    cnxn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
    cursor = cnxn.cursor()
    start = time.time()
@@ -59,6 +59,18 @@ def randrange(rangfro=None,rangto=None,num=None):
     end = time.time()
     exectime = end - start
     return render_template('count.html', t=exectime)
+	
+def randrange(rangfro=None,rangto=None,num=None):
+    dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
+    cursor = dbconn.cursor()
+    start = time.time()
+    for i in range(0,int(num)):
+        mag= round(random.uniform(rangfro, rangto),2)
+        success="SELECT * from [earth_data] where mag>'"+str(mag)+"'"
+        cursor.execute(success)
+    end = time.time()
+    exectime = end - start
+    return render_template('count.html', t=exectime)
 
 @app.route('/')
 def hello_world():
@@ -66,7 +78,10 @@ def hello_world():
 
 @app.route('/displaydata', methods=['POST'])
 def display():
-    return disdata() 
+    rangfro = float(request.args.get('rangefrom1'))
+    rangto = float(request.args.get('rangeto1'))
+    num = request.args.get('nom1')
+    return disdata(rangfro,rangto,num) 
 
 @app.route('/multiplerun', methods=['GET'])
 def randquery():
