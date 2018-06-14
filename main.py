@@ -39,7 +39,7 @@ def randrange(rangfro=None,rangto=None,num=None):
     cursor = dbconn.cursor()
     start = time.time()
     for i in range(0,int(num)):
-        mag= round(random.uniform(rangfro, rangto),2)
+        mag= round(random.uniform(rangfro, rangto),1)
         success="SELECT * from [earth_data] where mag>'"+str(mag)+"'"
         hash = hashlib.sha224(success.encode('utf-8')).hexdigest()
         key = "redis_cache:" + hash
