@@ -32,7 +32,7 @@ def disdata(rangfro=None,rangto=None,num=None):
    row = cursor.fetchall()
    end = time.time()
    executiontime = end - start
-   return render_template('searchearth.html', ci=row, t=executiontime)
+   return render_template('count.html', ci=row, t=executiontime)
 
 def randrange(rangfro=None,rangto=None,num=None):
     dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
@@ -76,7 +76,7 @@ def randrange(rangfro=None,rangto=None,num=None):
 def hello_world():
   return render_template('index.html')
 
-@app.route('/displaydata', methods=['POST'])
+@app.route('/displaydata', methods=['GET'])
 def display():
     rangfro = float(request.args.get('rangefrom1'))
     rangto = float(request.args.get('rangeto1'))
