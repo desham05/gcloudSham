@@ -6,6 +6,9 @@ import random
 import urllib
 import datetime
 import json
+import redis
+import pickle
+import hashlib
 
 app = Flask(__name__)
 
@@ -15,6 +18,11 @@ database = 'sqldb'
 username = 'sham05'
 password = '1qaz!QAZ'
 driver= '{ODBC Driver 13 for SQL Server}'
+myHostname = "shamuta.redis.cache.windows.net"
+myPassword = "qV08ERHDwOaSAn0WMo4ZwUn9AK34bMNIAziA2YIqQbk="
+
+r = redis.Redis(host='shamuta.redis.cache.windows.net',
+        port=6379, db=0, password='qV08ERHDwOaSAn0WMo4ZwUn9AK34bMNIAziA2YIqQbk=')
    
 def disdata():
    cnxn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
@@ -31,9 +39,23 @@ def randrange(rangfro=None,rangto=None,num=None):
     cursor = dbconn.cursor()
     start = time.time()
     for i in range(0,int(num)):
-    	mag= round(random.uniform(rangfro, rangto),2)
-    	success="SELECT * from [earth_data] where mag>'"+str(mag)+"'"
-    	cursor.execute(success)
+        mag= round(random.uniform(rangfro, rangto),2)
+        success="SELECT * from [earth_data] where mag>'"+str(mag)+"'"
+        hash = hashlib.sha224(success.encode('utf-8')).hexdigest()
+        key = "redis_cache:" + hash
+        if (r.get(key)):
+           print("redis cached")
+        else:
+           # Do MySQL query   
+           cursor.execute(success)
+           data = cursor.fetchall()
+           rows = []
+           for j in data:
+                rows.append(str(j))  
+           # Put data into cache for 1 hour
+           r.set(key, pickle.dumps(list(rows)) )
+           r.expire(key, 36);
+        cursor.execute(success)
     end = time.time()
     exectime = end - start
     return render_template('count.html', t=exectime)
