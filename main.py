@@ -65,7 +65,7 @@ def randrange(rangfro=None,rangto=None,num=None):
     cursor = dbconn.cursor()
     start = time.time()
     for i in range(0,int(num)):
-        mag= round(random.uniform(rangfro, rangto),2)
+        mag= round(random.uniform(rangfro, rangto),1)
         success="SELECT * from [earth_data] where mag>'"+str(mag)+"'"
         cursor.execute(success)
     end = time.time()
