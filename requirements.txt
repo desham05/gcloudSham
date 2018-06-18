@@ -1,7 +1,6 @@
 Flask==0.12.1
 pypyodbc
 redis
-deepcopy
 numpy
 pandas
 matplotlib
