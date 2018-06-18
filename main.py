@@ -1,6 +1,8 @@
 from copy import deepcopy
 import numpy as np
+print('numpy version ' + np.__version__)
 import pandas as pd
+print('Pandas version ' + pd.__version__)
 from matplotlib import pyplot as plt
 from sklearn.cluster import KMeans
 plt.rcParams['figure.figsize'] = (16, 9)

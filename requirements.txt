@@ -2,6 +2,7 @@ Flask==0.12.1
 pypyodbc
 redis
 numpy==1.14.5
-pyplot
+pandas==0.23.1
+matplotlib
 scipy
 KMeans
