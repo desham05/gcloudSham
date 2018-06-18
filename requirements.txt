@@ -1,8 +1,8 @@
 Flask==0.12.1
 pypyodbc
 redis
-matplotlib
 numpy==1.13.1
+matplotlib
 pandas==0.20.3
 scikit_learn==0.19.0
 scipy
