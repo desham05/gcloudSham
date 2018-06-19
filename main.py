@@ -22,7 +22,7 @@ def randrange(rangfro=None,rangto=None,num=None):
     dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
     cursor = dbconn.cursor()
     start = time.time()
-    success='SELECT '+rangfro+','+rangto+' from [titanic3]'
+    success='SELECT '+rangfro+','+rangto+' from [minnow_quiz_updated]'
     cursor.execute(success)
     
     result_set = cursor.fetchall()
