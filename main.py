@@ -3,6 +3,7 @@ from flask import Flask,redirect,render_template,request
 import pypyodbc
 import urllib
 import json
+import time
 import hashlib
 import numpy as np 
 import sklearn; print("Scikit-Learn", sklearn.__version__) 
@@ -20,6 +21,7 @@ driver= '{ODBC Driver 13 for SQL Server}'
 def randrange(rangfro=None,rangto=None,num=None):
     dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
     cursor = dbconn.cursor()
+    start = time.time()
     success='SELECT '+rangfro+','+rangto+' from [titanic3]'
     cursor.execute(success)
     
@@ -41,8 +43,9 @@ def randrange(rangfro=None,rangto=None,num=None):
     for i in range(int(num)):
        for j in range(int(num)):
            discentr.append(np.linalg.norm(centroid[i] - centroid[j]))
-    
-    return render_template('display.html', ci=X, l=len(X), cen=centroid, lab=labels, ctr=centrpoints, ds=discentr)	
+    end = time.time()
+    exectime = end - start
+    return render_template('display.html', ci=X, l=len(X), cen=centroid, ctr=centrpoints, ds=discentr, t=exectime)	
 
 @app.route('/multiplerun', methods=['GET'])
 def randquery():
