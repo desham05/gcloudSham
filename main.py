@@ -5,7 +5,7 @@ import urllib
 import json
 import hashlib
 import numpy as np
-from sklearn.cluster import KMeans
+import KMeans
 
 app = Flask(__name__)
 
