@@ -42,7 +42,7 @@ def randrange(rangfro=None,rangto=None,num=None):
        for j in range(int(num)):
            discentr.append(np.linalg.norm(centroid[i] - centroid[j]))
     
-	return render_template('display.html', ci=X, l=len(X), cen=centroid, lab=labels, ctr=centrpoints, ds=discentr)	
+    return render_template('display.html', ci=X, l=len(X), cen=centroid, lab=labels, ctr=centrpoints, ds=discentr)	
 
 @app.route('/multiplerun', methods=['GET'])
 def randquery():
