@@ -29,14 +29,20 @@ def randrange(rangfro=None,rangto=None,num=None):
     for row in result_set:
        age.append(row[rangfro])
        fare.append(row[rangto])	   
-
+    
     X = np.array(list(zip(age, fare)))
     kmeans = KMeans(n_clusters = int(num))
     kmeans.fit(X)
     centroid = kmeans.cluster_centers_
     labels = kmeans.labels_
+    centrpoints = {i: len(X[np.where(labels == i)]) for i in range(int(num))}
 
-    return render_template('display.html', ci=X, l=len(X), cen=centroid, lab=labels)	
+    discentr = []
+    for i in range(int(num)):
+       for j in range(int(num)):
+           discentr.append(np.linalg.norm(centroid[i] - centroid[j]))
+    
+	return render_template('display.html', ci=X, l=len(X), cen=centroid, lab=labels, ctr=centrpoints, ds=discentr)	
 
 @app.route('/multiplerun', methods=['GET'])
 def randquery():
