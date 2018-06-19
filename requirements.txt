@@ -1,2 +1,6 @@
 Flask==0.12.1
 pypyodbc
+numpy
+scipy 
+sklearn==0.19.1
+scikit-learn
