@@ -1,41 +1,49 @@
+import os
+from flask import Flask,redirect,render_template,request
+import pypyodbc
+import urllib
+import json
+import hashlib
 from copy import deepcopy
 import numpy as np
-print('numpy version ' + np.__version__)
-import pandas as pd
-print('Pandas version ' + pd.__version__)
-from matplotlib import pyplot as plt
 from sklearn.cluster import KMeans
-plt.rcParams['figure.figsize'] = (16, 9)
-plt.style.use('ggplot')
-data = pd.read_csv('titanic3.csv')
-print(data.shape)
-data.head()
 
-lat = data['age'].values
-long = data['fare'].values
-X = np.array(list(zip(lat, long)))
-# plt.scatter(lat, long, c='red', s=7)
- #plt.show()
-kmeans = KMeans(n_clusters = 8)
-kmeans.fit(X)
-centroid = kmeans.cluster_centers_
-labels = kmeans.labels_
+app = Flask(__name__)
 
-print(centroid)
-print(labels)
 
-print(len(labels))
-
-all = [[]]*8
-print(all)
-for i in range(len(X)):
+server = 'sham05.database.windows.net'
+database = 'sqldb'
+username = 'sham05'
+password = '1qaz!QAZ'
+driver= '{ODBC Driver 13 for SQL Server}'
    
-    # print(index)
-    #print(X[i], labels[i])
+def randrange(rangfro=None,rangto=None,num=None):
+    dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
+    cursor = dbconn.cursor()
+    success='SELECT '+rangfro+','+rangto+' from [titanic3]'
+    cursor.execute(success)
+    
+    result_set = cursor.fetchall()
+    age =[]
+    fare =[]	
+    for row in result_set:
+       age.append(row[rangfro])
+       fare.append(row[rangto])	   
 
- colors = ["b.","r.","g.","w.","y.","c.","m.","k."]
- for i in range(len(X)):
-     plt.plot(X[i][0], X[i][1], colors[labels[i]], markersize = 3)
+    X = np.array(list(zip(age, fare)))
+    kmeans = KMeans(n_clusters = int(num))
+    kmeans.fit(X)
+    centroid = kmeans.cluster_centers_
+    labels = kmeans.labels_
 
- plt.scatter(centroid[:,0], centroid[:,1], marker = "x",s=150,linewidths = 5, zorder = 10)
- plt.show()
+    return render_template('display.html', ci=X, l=len(X), cen=centroid, lab=labels)	
+
+@app.route('/multiplerun', methods=['GET'])
+def randquery():
+    rangfro = request.args.get('rangefrom')
+    rangto = request.args.get('rangeto')
+    num = request.args.get('nom')
+    return randrange(rangfro,rangto,num) 	
+
+if __name__ == '__main__':
+  app.run()

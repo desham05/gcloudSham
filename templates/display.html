@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<header>
+<b>
+Sham : 1001574763
+</b>
+</header>
+<p>
+  <!-- This retrives all the data based on the content typed in textbox of index.html -->
+  <p>Centroids are <b>{{cen}}</b>.
+</p>
+  <!-- This retrives all the data based on the content typed in textbox of index.html -->
+  <p>labels are <b>{{lab}}</b>.
+</p>
+<p>
+{% block content %}
+{% for i in range(l): %}
+ 
+  <!-- This retrives all the data based on the content typed in textbox of index.html -->
+  <p>The column1 is <b>{{ci[i][0]}}</b> the column2 is <b> {{ci[i][1]}} </b>.
+
+{% endfor %}
+{% endblock %}
+</p>
+</body>
+</html>
