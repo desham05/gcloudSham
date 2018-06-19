@@ -4,7 +4,7 @@ import pypyodbc
 import urllib
 import json
 import hashlib
-import numpy as np
+import numpy as np 
 import sklearn; print("Scikit-Learn", sklearn.__version__) 
 from sklearn.cluster import KMeans
 
