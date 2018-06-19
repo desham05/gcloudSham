@@ -42,7 +42,9 @@ def randrange(rangfro=None,rangto=None,num=None):
     discentr = []
     for i in range(int(num)):
        for j in range(int(num)):
-           discentr.append(np.linalg.norm(centroid[i] - centroid[j]))
+           if i!=j:
+              print('Distance between centroid' + str(i) + 'and centriod' + str(j) )		      
+              discentr.append(np.linalg.norm(centroid[i] - centroid[j]))
     end = time.time()
     exectime = end - start
     return render_template('display.html', ci=X, l=len(X), cen=centroid, ctr=centrpoints, ds=discentr, t=exectime)	
