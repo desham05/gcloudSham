@@ -4,7 +4,6 @@ import pypyodbc
 import urllib
 import json
 import hashlib
-from copy import deepcopy
 import numpy as np
 from sklearn.cluster import KMeans
 
