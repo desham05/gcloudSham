@@ -3,4 +3,4 @@ pypyodbc
 numpy
 scipy 
 sklearn
-
+scikit-learn
