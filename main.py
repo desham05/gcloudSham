@@ -5,7 +5,8 @@ import urllib
 import json
 import hashlib
 import numpy as np
-import KMeans
+from sklearn.cluster import KMeans
+print (scikit-learn._version)
 
 app = Flask(__name__)
 
