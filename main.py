@@ -3,62 +3,53 @@ from flask import Flask,redirect,render_template,request
 import pypyodbc
 import urllib
 import json
-import time
 import hashlib
-import numpy as np 
-import sklearn; print("Scikit-Learn", sklearn.__version__) 
+from copy import deepcopy
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn.cluster import KMeans
+plt.rcParams['figure.figsize'] = (16, 9)
+plt.style.use('ggplot')
+data = pd.read_csv('titanic3.csv')
+data.head()
 
 app = Flask(__name__)
 
-
-server = 'sham05.database.windows.net'
-database = 'sqldb'
-username = 'sham05'
-password = '1qaz!QAZ'
-driver= '{ODBC Driver 13 for SQL Server}'
    
-def randrange(rangfro=None,rangto=None,num=None):
-    dbconn = pypyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1443;DATABASE='+database+';UID='+username+';PWD='+ password)
-    cursor = dbconn.cursor()
-    start = time.time()
-    success='SELECT '+rangfro+','+rangto+' from [minnow_quiz_updated]'
-    cursor.execute(success)
-    
-    result_set = cursor.fetchall()
-    age =[]
-    fare =[]	
-    for row in result_set:
-       age.append(row[rangfro])
-       fare.append(row[rangto])	   
-    
-    X = np.array(list(zip(age, fare)))
-    kmeans = KMeans(n_clusters = int(num))
+def randrange():
+    lat = data['age'].values
+    long = data['fare'].values
+    X = np.array(list(zip(lat, long)))
+    # plt.scatter(lat, long, c='red', s=7)
+    # plt.show()
+    kmeans = KMeans(n_clusters=8)
     kmeans.fit(X)
     centroid = kmeans.cluster_centers_
     labels = kmeans.labels_
-    centrpoints = {i: len(X[np.where(labels == i)]) for i in range(int(num))}
 
-    discentr = []
-    for i in range(int(num)):
-       for j in range(int(num)):
-           if i!=j:
-              print('Distance between centroid' + str(i) + 'and centriod' + str(j) )		      
-              discentr.append(np.linalg.norm(centroid[i] - centroid[j]))
-    end = time.time()
-    exectime = end - start
-    return render_template('display.html', ci=X, l=len(X), cen=centroid, ctr=centrpoints, ds=discentr, t=exectime)	
+    all = [[]] * 8
+    print(all)
+    for i in range(len(X)):
+
+        # print(index)
+        # print(X[i], labels[i])
+
+        colors = ["b.", "r.", "g.", "w.", "y.", "c.", "m.", "k."]
+        for i in range(len(X)):
+            plt.plot(X[i][0], X[i][1], colors[labels[i]], markersize=3)
+
+        plt.scatter(centroid[:, 0], centroid[:, 1], marker="x", s=150, linewidths=5, zorder=10)
+        plt.show()
+	
 
 @app.route('/multiplerun', methods=['GET'])
 def randquery():
-    rangfro = request.args.get('rangefrom')
-    rangto = request.args.get('rangeto')
-    num = request.args.get('nom')
-    return randrange(rangfro,rangto,num) 	
+    return randrange() 	
 
 @app.route('/')
 def hello_world():
   return render_template('index.html')
-  
+
 if __name__ == '__main__':
   app.run()
