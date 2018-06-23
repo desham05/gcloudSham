@@ -57,16 +57,18 @@ def randrange():
 	
 def piechart():
     cursor = connectionObject.cursor()
-    success='SELECT count(*) from titanic where sex="female" and survived ="1" group by pclass'
+    success='select t.Age AS Age, count(*) as number from (  select case when age between 0 and 9 then 10 when age between 10 and 19 then 20 when age between 20 and 29 then 30 when age between 30 and 39 then 40 when age between 40 and 49 then 50 when age between 50 and 59 then 60 when age between 60 and 69 then 70 when age between 70 and 79 then 80 when age between 80 and 89 then 90 when age between 90 and 99 then 100 else 110 end as Age from minnow_updated) t group by t.Age'
+    print(success)
     cursor.execute(success)
     
     result_set = cursor.fetchall()
+    print(result_set)
     age =[]
     for row in result_set:
-       age.append(row['count(*)'])
+       age.append(row['Age'])
 
-    labels = ('PC1', 'PC2', 'PC3')
-    colors = ['gold', 'yellowgreen', 'lightcoral']
+    labels = ('<10', '10-19', '20-29')
+    colors = ['gold', 'yellowgreen', 'lightcoral','gold', 'yellowgreen', 'lightcoral','gold', 'yellowgreen', 'lightcoral','red','green']
     sizes = [age[0],age[1],age[2]]
     explode = (0.1, 0, 0)
 
@@ -75,6 +77,7 @@ def piechart():
     plt.show()
 
     return render_template('success.html')
+
 	
 def barchart():
     cursor = connectionObject.cursor()
