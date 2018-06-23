@@ -1,9 +1,5 @@
 import os
 from flask import Flask,redirect,render_template,request
-import urllib
-import json
-import hashlib
-from copy import deepcopy
 import numpy as np
 import pymysql
 from matplotlib import pyplot as plt
