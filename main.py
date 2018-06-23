@@ -1,11 +1,6 @@
 import os
-from flask import Flask,redirect,render_template,request
-import numpy as np
+from flask import Flask,redirect,render_template
 import pymysql
-from matplotlib import pyplot as plt
-from sklearn.cluster import KMeans
-plt.rcParams['figure.figsize'] = (16, 9)
-plt.style.use('ggplot')
 
 app = Flask(__name__)
 
@@ -25,89 +20,12 @@ def randrange():
     success='SELECT age,fare from titanic'
     cursor.execute(success)
     
-    result_set = cursor.fetchall()
-    age =[]
-    fare =[]	
-    for row in result_set:
-       age.append(row['age'])
-       fare.append(row['fare'])	   
-    X = np.array(list(zip(age, fare)))
-    kmeans = KMeans(n_clusters = int(8))
-    kmeans.fit(X)
-    centroid = kmeans.cluster_centers_
-    labels = kmeans.labels_
-
-    all = [[]] * 8
-    for i in range(len(X)):
-
-        # print(index)
-        # print(X[i], labels[i])
-
-        colors = ["b.", "r.", "g.", "w.", "y.", "c.", "m.", "k."]
-        for i in range(len(X)):
-            plt.plot(X[i][0], X[i][1], colors[labels[i]], markersize=3)
-
-        plt.scatter(centroid[:, 0], centroid[:, 1], marker="x", s=150, linewidths=5, zorder=10)
-        plt.show()
-        return render_template('success.html')		
-	
-def piechart():
-    cursor = connectionObject.cursor()
-    success='select t.Age AS Age, count(*) as number from (  select case when age between 0 and 9 then 10 when age between 10 and 19 then 20 when age between 20 and 29 then 30 when age between 30 and 39 then 40 when age between 40 and 49 then 50 when age between 50 and 59 then 60 when age between 60 and 69 then 70 when age between 70 and 79 then 80 when age between 80 and 89 then 90 when age between 90 and 99 then 100 else 110 end as Age from minnow_updated) t group by t.Age'
-    print(success)
-    cursor.execute(success)
-    
-    result_set = cursor.fetchall()
-    print(result_set)
-    age =[]
-    for row in result_set:
-       age.append(row['Age'])
-
-    labels = ('<10', '10-19', '20-29')
-    colors = ['gold', 'yellowgreen', 'lightcoral','gold', 'yellowgreen', 'lightcoral','gold', 'yellowgreen', 'lightcoral','red','green']
-    sizes = [age[0],age[1],age[2]]
-    explode = (0.1, 0, 0)
-
-    plt.pie(sizes, explode=explode, labels=labels, colors=colors,autopct='%1.1f%%', shadow=True, startangle=140)
-    plt.axis('equal')
-    plt.show()
-
-    return render_template('success.html')
-
-	
-def barchart():
-    cursor = connectionObject.cursor()
-    success='SELECT count(*) from titanic where sex="male" and survived ="1" group by pclass'
-    cursor.execute(success)
-    
-    result_set = cursor.fetchall()
-    age =[]
-    for row in result_set:
-       age.append(row['count(*)'])
-   
-    objects = ('PC1', 'PC2', 'PC3')
-    y_pos = np.arange(len(objects))
-    performance = [age[0],age[1],age[2]]
- 
-    plt.bar(y_pos, performance, align='center', alpha=0.5)
-    plt.xticks(y_pos, objects)
-    plt.ylabel('Count')
-    plt.title('numbers of male survivors')
-    plt.show()
-	
-    return render_template('success.html')
+    result = cursor.fetchall()
+    return render_template('searchearth.html', ci=result)		
 		
 @app.route('/multiplerun', methods=['GET'])
 def randquery():
     return randrange()
-
-@app.route('/pie', methods=['GET'])
-def piec():
-    return piechart()
-
-@app.route('/bar', methods=['GET'])
-def barc():
-    return barchart() 	
 
 @app.route('/')
 def hello_world():
